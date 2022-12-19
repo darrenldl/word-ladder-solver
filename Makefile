@@ -10,6 +10,10 @@ OCPINDENT = ocp-indent \
 all :
 	dune build @all
 
+.PHONY: run
+run:
+	dune exec -- src/wlsolve.exe test want
+
 .PHONY: format
 format :
 	$(OCPINDENT)

@@ -23,13 +23,14 @@ let add_edge x y t =
 let find_path (x : int) (y : int) (g : t) : int list option =
   let rec reconstruct_paths (rings : Int_set.t list) (from : Int_set.t) : int list Seq.t =
     match rings with
-    | [] -> Seq.return []
-    | r :: rs ->
-      Int_set.to_seq from
-      |> Seq.flat_map (fun x ->
-          reconstruct_paths rs (Int_set.inter r (Int_map.find y g.edges))
-          |> Seq.map (fun l -> x :: l)
-        )
+    | [] -> Int_set.to_seq from |> Seq.map (fun x -> [x])
+    | r :: rs -> (
+        Int_set.to_seq from
+        |> Seq.flat_map (fun x ->
+            reconstruct_paths rs (Int_set.inter r (Int_map.find x g.edges))
+            |> Seq.map (fun l -> x :: l)
+          )
+      )
   in
   let rec aux
       (overall_explored : Int_set.t)
